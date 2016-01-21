@@ -1,8 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define MAX_DIGITS 25
 #define BASE_OF_NUMERAL_SYSTEM 10
+
+/*
+ * The largest Fibonacci number with 25 digits, assuming series starts with 1 (not 0)
+ */
+#define MAX_FIBONACCI 120
 
 void get_max_fibonacci(int fib_1[MAX_DIGITS], int fib_2[MAX_DIGITS], int fib_n[MAX_DIGITS]);
 
@@ -11,27 +17,32 @@ int main() {
 	int fib_2[MAX_DIGITS] = {0};
 	int fib_n[MAX_DIGITS] = {0};
 
+	fib_1[MAX_DIGITS - 1] = 1;
 	fib_2[MAX_DIGITS - 1] = 1;
 	get_max_fibonacci(fib_1, fib_2, fib_n);
 	
+	char result[MAX_DIGITS + 1] = {0};	
 	int i;
-	for (i = MAX_DIGITS - 1; i >= 0; i--) {
-		printf("%d", fib_n[i]);
+	for (i = 0; i < MAX_DIGITS; i++) {
+		result[i] = fib_2[i] + '0';
 	}
 
-	printf("\n");
+	char *file_name = strcat(result, ".txt");
+	FILE *result_file = fopen(file_name, "w");
+	fwrite(result, MAX_DIGITS, sizeof(char), result_file);
+	fclose(result_file);
 	
 	return EXIT_SUCCESS;
 }
 
 void get_max_fibonacci(int fib_1[MAX_DIGITS], int fib_2[MAX_DIGITS], int fib_n[MAX_DIGITS]) {
-	int last_position = MAX_DIGITS - 1;
+	int fib_position;
 	
-	while(last_position >= 0) {
+	for (fib_position = 2; fib_position <= MAX_FIBONACCI; fib_position++) {
 		int carry = 0;
-		int position = MAX_DIGITS - 1;
+		int position;
 		
-		for (;position > last_position; position--) {
+		for (position = MAX_DIGITS - 1; position >= 0; position--) {
 			int sum = fib_1[position] + fib_2[position] + carry;
 			fib_n[position] = sum % BASE_OF_NUMERAL_SYSTEM;
 			carry = sum / BASE_OF_NUMERAL_SYSTEM;
@@ -42,15 +53,13 @@ void get_max_fibonacci(int fib_1[MAX_DIGITS], int fib_2[MAX_DIGITS], int fib_n[M
 			carry /= BASE_OF_NUMERAL_SYSTEM;
 			position--;	
 		}
-
-		fib_1 = fib_2;
-		fib_2 = fib_n;
 		
 		int i;
 		for (i = 0; i < MAX_DIGITS; i++) {
+			fib_1[i] = fib_2[i];
+			fib_2[i] = fib_n[i];
 			fib_n[i] = 0;
 		}
-		
-		last_position = position;
+
 	}
 }
