@@ -21,6 +21,8 @@ int main() {
 	for (i = 0; i < MAX_DIGITS; i++) {
 		result_text[i] = ' ';
 	}
+	
+	result_text[MAX_DIGITS] = '\0';
 
 	const char digits[10] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 	
@@ -57,7 +59,7 @@ int main() {
 		for (current_position = 0; current_position < last_position; current_position++) {
 			int index = result_digits[current_position];
 			char current_digit = digits[index];
-			result_text[MAX_DIGITS - current_position] = current_digit;
+			result_text[MAX_DIGITS - current_position - 1] = current_digit;
 		}
 
 		int offset = 0;
